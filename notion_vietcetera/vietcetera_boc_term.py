@@ -1,10 +1,12 @@
+import logging
+
 from bs4 import BeautifulSoup
 from langdetect import detect
 from datetime import datetime
 
 import requests
 import csv
-from notion_vietcetera import notion_api
+import notion_api
 
 # https://img.vietcetera.com/uploads/images/20-dec-2022/bocterm.jpg
 
@@ -20,6 +22,7 @@ totalPages = 1
 
 
 def main():
+    logging.basicConfig(filename='notion.log', format='%(asctime)s --- %(message)s', datefmt='%d/%m/%Y %I:%M:%S %p', level=logging.INFO)
     notionRows.append(
         ["Keyword", "Title", "What is it?", "Why is it popular?", "Link Post", "Image", "Topic", "Published At"])
     for i in range(1, totalPages + 1):
@@ -59,15 +62,19 @@ def main():
                                        whatIsitPart.text.strip().replace("\xa0", " ").replace('\n', ''),
                                        whyItPopularPart.text.strip().replace("\xa0", " ").replace('\n', ''),
                                        blog_full_link, image_full_link, topics, published_at])
+                    logging.info('Done: ' + post['title'])
             except Exception as e:
                 print(e)
+        logging.info('Done page: ' + str(i) + '/' + str(totalPages))
+        logging.info('Number of posts for page ' + str(i) + ': ' + str(len(listPosts['data']['articles'])))
+        logging.info('Number of posts added on ' + datetime.now().date().__str__() + ": " + str(len(notionRows) - 1))
 
     # can be used to import directly to Notion database
-    with open('./notion_vietcetera/notion_api.csv', 'w', newline='') as file:
+    with open('notion_api.csv', 'w', newline='') as file:
         writer = csv.writer(file, delimiter=';')
         writer.writerows(notionRows)
 
-    with open('./notion_vietcetera/notion_api.csv', newline='') as file:
+    with open('notion_api.csv', newline='') as file:
         reader = csv.reader(file, delimiter=';')
         for index, row in enumerate(reader):
             if index != 0:
