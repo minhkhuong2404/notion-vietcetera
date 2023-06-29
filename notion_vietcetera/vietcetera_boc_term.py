@@ -1,5 +1,6 @@
 from bs4 import BeautifulSoup
 from langdetect import detect
+from datetime import datetime
 
 import requests
 import csv
@@ -53,14 +54,15 @@ def main():
                     elif div.text.__contains__("3. ".lower()):
                         whyItPopularPart = pre_process(div, False)
 
-                notionRows.append([keyword, post['title'],
-                                   whatIsitPart.text.strip().replace("\xa0", " ").replace('\n', ''),
-                                   whyItPopularPart.text.strip().replace("\xa0", " ").replace('\n', ''),
-                                   blog_full_link, image_full_link, topics, published_at])
+                if datetime.strptime(published_at, '%Y-%m-%dT%H:%M:%S.%fZ').date() == datetime.now().date():
+                    notionRows.append([keyword, post['title'],
+                                       whatIsitPart.text.strip().replace("\xa0", " ").replace('\n', ''),
+                                       whyItPopularPart.text.strip().replace("\xa0", " ").replace('\n', ''),
+                                       blog_full_link, image_full_link, topics, published_at])
             except Exception as e:
                 print(e)
-                print(blog_full_link)
 
+    # can be used to import directly to Notion database
     with open('notion_api.csv', 'w', newline='') as file:
         writer = csv.writer(file, delimiter=';')
         writer.writerows(notionRows)

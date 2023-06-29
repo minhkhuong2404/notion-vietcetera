@@ -1,0 +1,8 @@
+requests~=2.31.0
+bs4~=0.0.1
+beautifulsoup4~=4.12.2
+pypdf2~=3.0.1
+googletrans~=3.1.0a0
+python-dotenv~=1.0.0
+langdetect~=1.0.9
+DateTime~=5.1
