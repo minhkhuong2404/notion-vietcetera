@@ -63,11 +63,11 @@ def main():
                 print(e)
 
     # can be used to import directly to Notion database
-    with open('notion_api.csv', 'w', newline='') as file:
+    with open('./notion_vietcetera/notion_api.csv', 'w', newline='') as file:
         writer = csv.writer(file, delimiter=';')
         writer.writerows(notionRows)
 
-    with open('notion_api.csv', newline='') as file:
+    with open('./notion_vietcetera/notion_api.csv', newline='') as file:
         reader = csv.reader(file, delimiter=';')
         for index, row in enumerate(reader):
             if index != 0:
