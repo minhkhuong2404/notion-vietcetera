@@ -31,7 +31,7 @@ jobs:
         run: |
           cd notion_vietcetera
           python vietcetera_boc_term.py
-      - uses: minhkhuong2404/notion-vietcetera@release
+      - uses: minhkhuong2404/notion-vietcetera@latest
         env: # default use ${{ secrets.SUMMARY_GITHUB_TOKEN }}, you should replace with your personal access token
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
