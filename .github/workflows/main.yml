@@ -1,4 +1,4 @@
-name: run notion.py
+name: get lastest boc term posts from vietcetera
 
 on:
   workflow_dispatch:
@@ -29,9 +29,10 @@ jobs:
 
       - name: install python packages
         run: |
-          cd notion_vietcetera
           python -m pip install --upgrade pip
           pip install -r requirements.txt
 
       - name: execute py script # run main.py
-        run: python vietcetera_boc_term.py
+        run: |
+          cd notion_vietcetera
+          python vietcetera_boc_term.py
