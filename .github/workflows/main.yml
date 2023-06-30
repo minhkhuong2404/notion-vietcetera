@@ -15,7 +15,7 @@ jobs:
       contents: write
     steps:
       - name: checkout repo content
-        uses: actions/checkout@v2 # checkout the repository content
+        uses: actions/checkout@v3 # checkout the repository content
 
       - name: setup python
         uses: actions/setup-python@v4
@@ -31,6 +31,8 @@ jobs:
         run: |
           cd notion_vietcetera
           python vietcetera_boc_term.py
+
+      - uses: actions/checkout@v3
       - uses: minhkhuong2404/notion-vietcetera@latest
         env: # default use ${{ secrets.SUMMARY_GITHUB_TOKEN }}, you should replace with your personal access token
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
