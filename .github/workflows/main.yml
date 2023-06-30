@@ -3,7 +3,7 @@ name: get lastest boc term posts from vietcetera
 on:
   workflow_dispatch:
   schedule:
-    - cron: '0 6 * * *' # At 00:00 every day
+    - cron: '59 23 * * *' # At 00:00 every day
 env:
   # Setting an environment variable with the value of a configuration variable
   NOTION_API_KEY: ${{ secrets.NOTION_API_KEY }}
