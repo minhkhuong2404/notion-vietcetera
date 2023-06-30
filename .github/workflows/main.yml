@@ -32,9 +32,9 @@ jobs:
           cd notion_vietcetera
           python vietcetera_boc_term.py
 
-      - name: Commit changes
+      - name: commit new log changes
         run: |
-          git config --global user.email "no-reply@github.com"
+          git config --global user.email ${{ secrets.EMAIL }}
           git config --global user.name "GitHub Actions"
           git add .
           git commit -m "Update log file"
