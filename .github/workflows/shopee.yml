@@ -2,8 +2,8 @@ name: get current flash sale on shopee
 
 on:
   workflow_dispatch:
-  schedule:
-    - cron: '0 * * * *' # Every hour
+#  schedule:
+#    - cron: '0 * * * *' # Every hour
 env:
   # Setting an environment variable with the value of a configuration variable
   NOTION_API_KEY: ${{ secrets.NOTION_API_KEY }}
