@@ -64,13 +64,23 @@ def main():
     with open('temp_page_id.txt', 'r') as f:
         old_flash_sale_item_ids = f.readlines()
     # remove existing id in old_flash_sale_item_ids
-    all_items_id = list(filter(lambda x: x not in old_flash_sale_item_ids, all_items_id))
-    print("Number of new items: " + str(all_items_id.__len__()))
-    clean_up(old_flash_sale_item_ids)
-    # clear content of file
+    new_flash_sale_item_ids = list(filter(lambda x: x not in old_flash_sale_item_ids, all_items_id))
+    # id already exist in old_flash_sale_item_ids
+    update_flash_sale_item_ids = list(filter(lambda x: x in old_flash_sale_item_ids, all_items_id))
+    remove_flash_sale_item_ids = list(filter(lambda x: x not in all_items_id, old_flash_sale_item_ids))
+
+    print("Number of new items: " + str(new_flash_sale_item_ids.__len__()))
+    print("Number of updated items: " + str(update_flash_sale_item_ids.__len__()))
+    print("Number of removed items: " + str(remove_flash_sale_item_ids.__len__()))
+
+    clean_up(remove_flash_sale_item_ids)
     open('temp_page_id.txt', 'w').close()
 
-    all_items_size = all_items_id_and_is_sold_out.__len__()
+    # update flash sale items
+    all_items_id = new_flash_sale_item_ids + update_flash_sale_item_ids
+    all_items_id_and_is_sold_out = list(filter(lambda x: x[0] in all_items_id, all_items_id_and_is_sold_out))
+
+    all_items_size = all_items_id.__len__()
     for i in range(0, all_items_size, BATCH_SIZE):
         get_flash_sale_items(promotion_id, all_items_id[i:i + BATCH_SIZE],
                              all_items_id_and_is_sold_out[i:i + BATCH_SIZE], all_categories)
