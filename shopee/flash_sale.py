@@ -3,6 +3,8 @@ import json
 import os
 import random
 import sys
+import pytz
+
 from multiprocessing import cpu_count, Pool
 
 from operator import itemgetter
@@ -47,8 +49,10 @@ def main():
     response = requests.get(url, headers=headers)
     promotion_info = json.loads(response.text)['data']['items'][0]
     promotion_id, start_time, end_time = itemgetter('promotionid', 'start_time', 'end_time')(promotion_info)
-    iso_date_start_time = datetime.fromtimestamp(start_time).strftime("%d/%m %H:%M")
-    iso_date_end_time = datetime.fromtimestamp(end_time).strftime("%d/%m %H:%M")
+    iso_date_start_time = datetime.utcfromtimestamp(start_time)\
+        .replace(tzinfo=pytz.timezone("Asia/Bangkok")).strftime("%d/%m %H:%M")
+    iso_date_end_time = datetime.fromtimestamp(end_time)\
+        .replace(tzinfo=pytz.timezone("Asia/Bangkok")).strftime("%d/%m %H:%M")
     update_database_header(iso_date_start_time, iso_date_end_time)
     # clear content of file
     open('temp_page_id.txt', 'w').close()
@@ -183,7 +187,6 @@ def add_flash_sale_item_to_database(flash_sale_item):
     }
     response = requests.post(NOTION_PAGE_URL, data=json.dumps(data), headers=notion_headers)
     try:
-        print(response.text)
         page_id = json.loads(response.text)['id']
         with open('temp_page_id.txt', 'a') as f:
             f.write(page_id + "\n")
@@ -210,8 +213,7 @@ def archive_page(old_flash_sale):
     data = {
         "archived": True
     }
-    response = requests.patch(archive_url, headers=notion_headers, data=json.dumps(data))
-    print(response.text)
+    requests.patch(archive_url, headers=notion_headers, data=json.dumps(data))
 
 
 if __name__ == '__main__':
