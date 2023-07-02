@@ -66,8 +66,8 @@ def main():
     with open('temp_page_id.txt', 'r') as f:
         old_flash_sale_item_ids = f.readlines()
     # remove existing id in old_flash_sale_item_ids
-
     all_items_id = list(filter(lambda x: x not in old_flash_sale_item_ids, all_items_id))
+    print("Number of new items: " + str(all_items_id.__len__()))
     clean_up(old_flash_sale_item_ids)
 
     all_items_size = all_items_id_and_is_sold_out.__len__()
