@@ -49,13 +49,11 @@ def main():
     promotion_info = json.loads(response.text)['data']['items'][0]
     promotion_id, start_time, end_time = itemgetter('promotionid', 'start_time', 'end_time')(promotion_info)
     vn_tz = pytz.timezone("Asia/Bangkok")
-    iso_date_start_time = datetime.utcfromtimestamp(start_time)\
+    iso_date_start_time = datetime.utcfromtimestamp(start_time) \
         .replace(tzinfo=pytz.utc).astimezone(vn_tz).strftime("%d/%m %H:%M")
-    iso_date_end_time = datetime.utcfromtimestamp(end_time)\
+    iso_date_end_time = datetime.utcfromtimestamp(end_time) \
         .replace(tzinfo=pytz.utc).astimezone(vn_tz).strftime("%d/%m %H:%M")
     update_database_header(iso_date_start_time, iso_date_end_time)
-    # clear content of file
-    open('temp_page_id.txt', 'w').close()
 
     flash_sale_url = "https://shopee.vn/api/v4/flash_sale/get_all_itemids?" \
                      "need_personalize=true&order_mode=2&promotionid=" + str(promotion_id) + "&sort_soldout=true"
@@ -69,6 +67,8 @@ def main():
     all_items_id = list(filter(lambda x: x not in old_flash_sale_item_ids, all_items_id))
     print("Number of new items: " + str(all_items_id.__len__()))
     clean_up(old_flash_sale_item_ids)
+    # clear content of file
+    open('temp_page_id.txt', 'w').close()
 
     all_items_size = all_items_id_and_is_sold_out.__len__()
     for i in range(0, all_items_size, BATCH_SIZE):
