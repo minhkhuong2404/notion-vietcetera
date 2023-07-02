@@ -37,7 +37,6 @@ notion_headers = {
 
 
 def main():
-    clean_up()
     all_sessions_url = "https://shopee.vn/api/v4/flash_sale/get_all_sessions?category_personalization_type=1"
     all_categories_json = json.loads(requests.get(all_sessions_url, headers=headers).text)['data']['sessions'][0][
         'categories']
@@ -63,6 +62,13 @@ def main():
     all_flash_sale_items = json.loads(requests.get(flash_sale_url, headers=headers).text)['data']['item_brief_list']
     all_items_id_and_is_sold_out = list(map(itemgetter('itemid', 'is_soldout'), all_flash_sale_items))
     all_items_id = list(map(itemgetter(0), all_items_id_and_is_sold_out))
+
+    with open('temp_page_id.txt', 'r') as f:
+        old_flash_sale_item_ids = f.readlines()
+    # remove existing id in old_flash_sale_item_ids
+
+    all_items_id = list(filter(lambda x: x not in old_flash_sale_item_ids, all_items_id))
+    clean_up(old_flash_sale_item_ids)
 
     all_items_size = all_items_id_and_is_sold_out.__len__()
     for i in range(0, all_items_size, BATCH_SIZE):
@@ -200,13 +206,10 @@ def add_flash_sale_item_to_database(flash_sale_item):
         print(response.text)
 
 
-def clean_up():
+def clean_up(old_flash_sale_item_ids):
     # create file if not exists
     if not os.path.exists('temp_page_id.txt'):
         open('temp_page_id.txt', 'w').close()
-
-    with open('temp_page_id.txt', 'r') as f:
-        old_flash_sale_item_ids = f.readlines()
 
     pool = Pool(cpu_count() - 1)
     pool.map(archive_page, old_flash_sale_item_ids)
