@@ -183,6 +183,7 @@ def add_flash_sale_item_to_database(flash_sale_item):
     }
     response = requests.post(NOTION_PAGE_URL, data=json.dumps(data), headers=notion_headers)
     try:
+        print(response.text)
         page_id = json.loads(response.text)['id']
         with open('temp_page_id.txt', 'a') as f:
             f.write(page_id + "\n")
@@ -209,7 +210,8 @@ def archive_page(old_flash_sale):
     data = {
         "archived": True
     }
-    requests.patch(archive_url, headers=notion_headers, data=json.dumps(data))
+    response = requests.patch(archive_url, headers=notion_headers, data=json.dumps(data))
+    print(response.text)
 
 
 if __name__ == '__main__':
