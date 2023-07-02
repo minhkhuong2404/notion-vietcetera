@@ -2,12 +2,15 @@ import requests
 import json
 import os
 import random
+import sys
 from multiprocessing import cpu_count, Pool
 
 from operator import itemgetter
 from datetime import datetime
 from dotenv import load_dotenv
-from shared.list_emojis import list_emojis
+
+sys.path.append("..")
+from constants.list_emojis import all_emojis
 
 load_dotenv()
 
@@ -111,7 +114,7 @@ def add_flash_sale_item_to_database(flash_sale_item):
             "database_id": DATABASE_SHOPEE_ID
         },
         "icon": {
-            "emoji": random.choice(list_emojis)
+            "emoji": random.choice(all_emojis())
         },
         "cover": {
             "external": {
