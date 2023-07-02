@@ -31,3 +31,13 @@ jobs:
         run: |
           cd shopee
           python flash_sale.py
+
+      - name: commit new log changes
+        run: |
+          git config --global user.email "minhkhuong2404@users.noreply.github.com"
+          git config --global user.name "Lữ Minh Khương"
+          git add .
+          git commit -m "Update log file"
+          git push
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
