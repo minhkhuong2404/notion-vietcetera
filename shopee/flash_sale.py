@@ -61,8 +61,7 @@ def main():
     all_items_id_and_is_sold_out = list(map(itemgetter('itemid', 'is_soldout'), all_flash_sale_items))
     all_items_id = list(map(itemgetter(0), all_items_id_and_is_sold_out))
 
-    with open('temp_page_id.txt', 'r') as f:
-        old_flash_sale_item_ids = f.readlines()
+    old_flash_sale_item_ids = temp_ids()
     # remove existing id in old_flash_sale_item_ids
     new_flash_sale_item_ids = list(filter(lambda x: x not in old_flash_sale_item_ids, all_items_id))
     # id already exist in old_flash_sale_item_ids
@@ -214,9 +213,21 @@ def add_flash_sale_item_to_database(flash_sale_item):
         page_id = json.loads(response.text)['id']
         with open('temp_page_id.txt', 'a') as f:
             f.write(page_id + "\n")
+        with open('temp_id.txt', 'a') as f:
+            f.write(itemid + "\n")
     except Exception as e:
         print("Error when adding item to database", e)
         print(response.text)
+
+
+def temp_ids():
+    if not os.path.exists('temp_id.txt'):
+        open('temp_id.txt', 'w').close()
+
+    with open('temp_id.txt', 'r') as f:
+        add_flash_sale_ids = f.readlines()
+
+    return add_flash_sale_ids
 
 
 def clean_up(old_flash_sale_item_ids):
