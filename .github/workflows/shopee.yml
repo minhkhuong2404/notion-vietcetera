@@ -1,0 +1,33 @@
+name: get current flash sale on shopee
+
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: '0 * * * *' # Every hour
+env:
+  # Setting an environment variable with the value of a configuration variable
+  NOTION_API_KEY: ${{ secrets.NOTION_API_KEY }}
+  DATABASE_SHOPEE_ID: ${{ secrets.DATABASE_SHOPEE_ID }}
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - name: checkout repo content
+        uses: actions/checkout@v3 # checkout the repository content
+
+      - name: setup python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.11' # install the python version needed
+
+      - name: install python packages
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+
+      - name: execute py script # run main.py
+        run: |
+          cd shopee
+          python flash_sale.py

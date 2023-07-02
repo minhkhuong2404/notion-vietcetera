@@ -8,7 +8,6 @@ from io import BytesIO
 
 
 def createPicture(title, picture, header):
-    fileName = "img.png"
 
     basewidth = 20
     web_pic = requests.get(picture)
@@ -46,8 +45,6 @@ def createPicture(title, picture, header):
     picCopy.paste(pic, ((MAX_W - img_w) // 2, (MAX_H - img_h) // 4))
     picCopy = header_info.copy()
     picCopy.paste(pic, ((MAX_W - img_w) // 2, (MAX_H - img_h) // 8))
-
-    picCopy.save(fileName)
 
 
 URL = 'https://nld.com.vn/'

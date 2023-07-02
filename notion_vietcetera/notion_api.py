@@ -1,6 +1,5 @@
 import json
 import os
-
 import requests
 from dotenv import load_dotenv
 
@@ -123,3 +122,7 @@ def get_after_the_last_dot_most_2000_characters(text):
         first_character = sentence[0]
         if text.find(first_character) + len(sentence) < 2000:
             return text[text.find(first_character):text.find(first_character) + len(sentence)]
+
+
+if __name__ == '__main__':
+    retrieve_database()
