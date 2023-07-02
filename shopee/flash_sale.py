@@ -68,6 +68,9 @@ def main():
     # id already exist in old_flash_sale_item_ids
     update_flash_sale_item_ids = list(filter(lambda x: x in old_flash_sale_item_ids, all_items_id))
     remove_flash_sale_item_ids = list(filter(lambda x: x not in all_items_id, old_flash_sale_item_ids))
+    new_flash_sale_item_ids, update_flash_sale_item_ids = list(
+        set(new_flash_sale_item_ids) - set(update_flash_sale_item_ids)), list(
+        set(update_flash_sale_item_ids) - set(new_flash_sale_item_ids))
 
     print("Number of new items: " + str(new_flash_sale_item_ids.__len__()))
     print("Number of updated items: " + str(update_flash_sale_item_ids.__len__()))
