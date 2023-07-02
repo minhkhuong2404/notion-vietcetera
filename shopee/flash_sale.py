@@ -51,7 +51,7 @@ def main():
     vn_tz = pytz.timezone("Asia/Bangkok")
     iso_date_start_time = datetime.utcfromtimestamp(start_time)\
         .replace(tzinfo=pytz.utc).astimezone(vn_tz).strftime("%d/%m %H:%M")
-    iso_date_end_time = datetime.fromtimestamp(end_time)\
+    iso_date_end_time = datetime.utcfromtimestamp(end_time)\
         .replace(tzinfo=pytz.utc).astimezone(vn_tz).strftime("%d/%m %H:%M")
     update_database_header(iso_date_start_time, iso_date_end_time)
     # clear content of file
