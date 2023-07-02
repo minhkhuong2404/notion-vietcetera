@@ -7,7 +7,7 @@ from multiprocessing import cpu_count, Pool
 from operator import itemgetter
 from datetime import datetime
 from dotenv import load_dotenv
-from list_emojis import list_emojis
+from shared.list_emojis import list_emojis
 
 load_dotenv()
 
@@ -48,7 +48,7 @@ def main():
     iso_date_end_time = datetime.fromtimestamp(end_time).strftime("%d/%m %H:%M")
     update_database_header(iso_date_start_time, iso_date_end_time)
     # clear content of file
-    open('old_flash_sale_page_id.txt', 'w').close()
+    open('temp_page_id.txt', 'w').close()
 
     flash_sale_url = "https://shopee.vn/api/v4/flash_sale/get_all_itemids?" \
                      "need_personalize=true&order_mode=2&promotionid=" + str(promotion_id) + "&sort_soldout=true"
@@ -181,7 +181,7 @@ def add_flash_sale_item_to_database(flash_sale_item):
     response = requests.post(NOTION_PAGE_URL, data=json.dumps(data), headers=notion_headers)
     try:
         page_id = json.loads(response.text)['id']
-        with open('old_flash_sale_page_id.txt', 'a') as f:
+        with open('temp_page_id.txt', 'a') as f:
             f.write(page_id + "\n")
     except Exception as e:
         print("Error when adding item to database", e)
@@ -190,10 +190,10 @@ def add_flash_sale_item_to_database(flash_sale_item):
 
 def clean_up():
     # create file if not exists
-    if not os.path.exists('old_flash_sale_page_id.txt'):
-        open('old_flash_sale_page_id.txt', 'w').close()
+    if not os.path.exists('temp_page_id.txt'):
+        open('temp_page_id.txt', 'w').close()
 
-    with open('old_flash_sale_page_id.txt', 'r') as f:
+    with open('temp_page_id.txt', 'r') as f:
         old_flash_sale_item_ids = f.readlines()
 
     pool = Pool(cpu_count() - 1)

@@ -30,4 +30,4 @@ jobs:
       - name: execute py script # run main.py
         run: |
           cd shopee
-          python flash_sale.py
+          python shopee/flash_sale.py
