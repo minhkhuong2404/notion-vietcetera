@@ -49,10 +49,11 @@ def main():
     response = requests.get(url, headers=headers)
     promotion_info = json.loads(response.text)['data']['items'][0]
     promotion_id, start_time, end_time = itemgetter('promotionid', 'start_time', 'end_time')(promotion_info)
+    vn_tz = pytz.timezone("Asia/Bangkok")
     iso_date_start_time = datetime.utcfromtimestamp(start_time)\
-        .replace(tzinfo=pytz.timezone("Asia/Bangkok")).strftime("%d/%m %H:%M")
+        .replace(tzinfo=pytz.utc).astimezone(vn_tz).strftime("%d/%m %H:%M")
     iso_date_end_time = datetime.fromtimestamp(end_time)\
-        .replace(tzinfo=pytz.timezone("Asia/Bangkok")).strftime("%d/%m %H:%M")
+        .replace(tzinfo=pytz.utc).astimezone(vn_tz).strftime("%d/%m %H:%M")
     update_database_header(iso_date_start_time, iso_date_end_time)
     # clear content of file
     open('temp_page_id.txt', 'w').close()
