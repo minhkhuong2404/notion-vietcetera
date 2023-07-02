@@ -79,8 +79,12 @@ def get_flash_sale_items(promotion_id, all_items_id, all_items_id_and_is_sold_ou
         "with_dp_items": True
     }
 
-    flash_sale_items_info = \
-        json.loads(requests.post(FLASH_SALE_URL, data=json.dumps(payload), headers=headers).text)['data']['items']
+    try:
+        flash_sale_items_info = \
+            json.loads(requests.post(FLASH_SALE_URL, data=json.dumps(payload), headers=headers).text)['data']['items']
+    except TypeError as e:
+        print("Error when getting flash sale items info")
+        print(e)
 
     flash_catid = list(map(itemgetter('flash_catid'), flash_sale_items_info))
     flash_category_name = list(filter(lambda x: x[0] == flash_catid[0], all_categories))[0][1]
