@@ -29,7 +29,7 @@ jobs:
 
       - name: execute py script # run main.py
         run: |
-          cd notion_vietcetera
+          cd vietcetera
           python vietcetera_boc_term.py
 
       - name: commit new log changes
