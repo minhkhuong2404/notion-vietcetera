@@ -1,11 +1,11 @@
 import logging
+import csv
 
+from datetime import datetime
 from bs4 import BeautifulSoup
 from langdetect import detect
-from datetime import datetime
 
 import requests
-import csv
 import notion_api
 
 # https://img.vietcetera.com/uploads/images/20-dec-2022/bocterm.jpg
@@ -13,21 +13,22 @@ import notion_api
 IMG_LINK = "https://img.vietcetera.com/"
 BLOG_LINK = "https://vietcetera.com/vn/"
 
-apiPosts = "https://api.vietcetera.com/client/api/v2/collection/detail?limit=12&slug=boc-term&language=VN&page="
+API_POSTS = "https://api.vietcetera.com/client/api/v2/collection/detail?limit=12&slug=boc-term&language=VN&page="
 
-notionRows = []
+notion_rows = []
 
 # max 21 ???
-totalPages = 1
+TOTAL_PAGES = 1
 
 
 def main():
-    logging.basicConfig(filename='notion.log', format='%(asctime)s --- %(message)s', datefmt='%d/%m/%Y %I:%M:%S %p', level=logging.INFO)
-    notionRows.append(
+    logging.basicConfig(filename='notion.log', format='%(asctime)s --- %(message)s', datefmt='%d/%m/%Y %I:%M:%S %p',
+                        level=logging.INFO)
+    notion_rows.append(
         ["Keyword", "Title", "What is it?", "Why is it popular?", "Link Post", "Image", "Topic", "Published At"])
-    for i in range(1, totalPages + 1):
-        listPosts = requests.get(apiPosts + str(i)).json()
-        for post in listPosts['data']['articles']:
+    for i in range(1, TOTAL_PAGES + 1):
+        list_posts = requests.get(API_POSTS + str(i), timeout=30).json()
+        for post in list_posts['data']['articles']:
             keyword = extract_keyword(post['title'])
 
             image_link = post['images']['url']
@@ -41,44 +42,44 @@ def main():
             slug = post['slug']
             blog_full_link = BLOG_LINK + slug
 
-            page = requests.get(blog_full_link)
+            page = requests.get(blog_full_link, timeout=30)
             soup = BeautifulSoup(page.content, 'html.parser')
             try:
-                contentDetail = soup.find('div', class_='styles_contentWrapper__xo07n')
-                detail = contentDetail.find('div', class_='styles_articleContentDetail__mMd_9 article-content-detail')
+                content_detail = soup.find('div', class_='styles_contentWrapper__xo07n')
+                detail = content_detail.find('div', class_='styles_articleContentDetail__mMd_9 article-content-detail')
 
-                listOfDivs = detail.findAll('div')
-                whatIsitPart = listOfDivs[0]
-                whyItPopularPart = listOfDivs[0]
+                list_of_divs = detail.findAll('div')
+                what_isit_part = list_of_divs[0]
+                why_it_popular_part = list_of_divs[0]
 
-                for div in listOfDivs:
-                    if div.text.__contains__("1. ".lower()):
-                        whatIsitPart = pre_process(div, False)
-                    elif div.text.__contains__("3. ".lower()):
-                        whyItPopularPart = pre_process(div, False)
+                for div in list_of_divs:
+                    if "1. ".lower() in div.text:
+                        what_isit_part = pre_process(div, False)
+                    elif "3. ".lower() in div.text:
+                        why_it_popular_part = pre_process(div, False)
 
                 if datetime.strptime(published_at, '%Y-%m-%dT%H:%M:%S.%fZ').date() == datetime.now().date():
-                    notionRows.append([keyword, post['title'],
-                                       whatIsitPart.text.strip().replace("\xa0", " ").replace('\n', ''),
-                                       whyItPopularPart.text.strip().replace("\xa0", " ").replace('\n', ''),
-                                       blog_full_link, image_full_link, topics, published_at])
-                    logging.info('Done: ' + post['title'])
-            except Exception as e:
-                print(e)
-        logging.info('Done page: ' + str(i) + '/' + str(totalPages))
-        logging.info('Number of posts for page ' + str(i) + ': ' + str(len(listPosts['data']['articles'])))
-        logging.info('Number of posts added on ' + datetime.now().date().__str__() + ": " + str(len(notionRows) - 1))
+                    notion_rows.append([keyword, post['title'],
+                                        what_isit_part.text.strip().replace("\xa0", " ").replace('\n', ''),
+                                        why_it_popular_part.text.strip().replace("\xa0", " ").replace('\n', ''),
+                                        blog_full_link, image_full_link, topics, published_at])
+                    logging.info('Done: %s', post['title'])
+            except Exception as e_mess:
+                print(e_mess)
+        logging.info('Done page: %s/%s', str(i), str(TOTAL_PAGES))
+        logging.info('Number of posts for page %s: %s', str(i), str(len(list_posts['data']['articles'])))
+        logging.info('Number of posts added on %s: %s', str(datetime.now().date()), str(len(notion_rows) - 1))
 
     # can be used to import directly to Notion database
-    with open('notion_api.csv', 'w', newline='') as file:
+    with open('notion_api.csv', 'w', newline='', encoding='utf-8') as file:
         writer = csv.writer(file, delimiter=';')
-        writer.writerows(notionRows)
+        writer.writerows(notion_rows)
 
-    with open('notion_api.csv', newline='') as file:
+    with open('notion_api.csv', newline='', encoding='utf-8') as file:
         reader = csv.reader(file, delimiter=';')
         for index, row in enumerate(reader):
             if index != 0:
-                notion_api.add_row_to_database(row)
+                notion_api.add_row_to_database_boc_term(row)
 
 
 def extract_keyword(title):
@@ -96,16 +97,16 @@ def mergeKeyword(title, delimiter):
         try:
             if word and detect(word) != 'vi':
                 keyword.append(word)
-        except Exception as e:
+        except Exception as e_mess:
             print(word)
             print(title)
-            print(e)
+            print(e_mess)
     return ' '.join(keyword)
 
 
 def pre_process(detail, is_why_it_popular=False):
     part = detail
-    if is_why_it_popular and not part.find('h2').text.__contains__('phổ biến'.lower()):
+    if is_why_it_popular and not ('phổ biến'.lower()) in part.find('h2').text:
         raise Exception("No phổ biến")
     if part.find('h2'):
         part.find('h2').extract()
