@@ -1,13 +1,13 @@
-name: get lastest boc term posts from vietcetera
+name: get lastest thuong posts from vietcetera
 
 on:
   workflow_dispatch:
   schedule:
-    - cron: '0 16 * * *' # At 16:00 every day
+    - cron: "0 16 * * *" # At 16:00 every day
 env:
   # Setting an environment variable with the value of a configuration variable
   NOTION_API_KEY: ${{ secrets.NOTION_API_KEY }}
-  DATABASE_ID: ${{ secrets.DATABASE_ID }}
+  DATABASE_ID: ${{ secrets.DATABASE_BAN_THAN_ID }}
 jobs:
   build:
     runs-on: ubuntu-latest
@@ -20,7 +20,7 @@ jobs:
       - name: setup python
         uses: actions/setup-python@v4
         with:
-          python-version: '3.11' # install the python version needed
+          python-version: "3.11" # install the python version needed
 
       - name: install python packages
         run: |
@@ -30,7 +30,7 @@ jobs:
       - name: execute py script # run main.py
         run: |
           cd vietcetera
-          python vietcetera_boc_term.py
+          python main.py -c 'ban-than' -d ${{ env.DATABASE_ID }}
 
       - name: commit new log changes
         run: |

@@ -1,5 +1,8 @@
 .env
 .idea
+.venv
+.vscode
+.DS_Store
 */**.xlsx
 */**.csv
 */**.pdf
