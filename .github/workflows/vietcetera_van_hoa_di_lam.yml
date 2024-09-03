@@ -3,7 +3,7 @@ name: get lastest posts from van hoa di lam topic vietcetera
 on:
   workflow_dispatch:
   schedule:
-    - cron: "5 16 * * *" # At 16:05 every day
+    - cron: "25 16 * * *" # At 16:25 every day
 env:
   # Setting an environment variable with the value of a configuration variable
   NOTION_API_KEY: ${{ secrets.NOTION_API_KEY }}
