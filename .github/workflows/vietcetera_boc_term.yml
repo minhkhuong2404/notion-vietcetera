@@ -1,4 +1,4 @@
-name: get lastest boc term posts from vietcetera
+name: get lastest posts from boc term collection vietcetera
 
 on:
   workflow_dispatch:
