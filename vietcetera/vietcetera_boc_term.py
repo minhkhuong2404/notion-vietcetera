@@ -79,7 +79,7 @@ def main():
         reader = csv.reader(file, delimiter=';')
         for index, row in enumerate(reader):
             if index != 0:
-                notion_api.add_row_to_database_boc_term(row)
+                notion_api.add_row_to_database(row)
 
 
 def extract_keyword(title):

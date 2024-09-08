@@ -57,8 +57,8 @@ class VietceteraTopic:
 							view_counter = requests.post(VIEW_COUNTER, data=payload, timeout=30).json()
 							total_likes = view_counter['data']['article']['totalLike']
 							total_views = view_counter['data']['article']['views']
-							views_per_hour = view_counter['data']['article']['viewsArticle']['1h_TopView']
-							views_per_day = view_counter['data']['article']['viewsArticle']['1d_TopView']
+							views_per_hour = view_counter['data']['article']['viewsArticle']['1h_TopView'] if '1h_TopView' in view_counter['data']['article']['viewsArticle'] else 0
+							views_per_day = view_counter['data']['article']['viewsArticle']['1d_TopView'] if '1d_TopView' in view_counter['data']['article']['viewsArticle'] else 0
 
 							self.process_post(article_id, blog_full_link, image_full_link, keyword, post, published_at, soup, title, topics, excerpt, total_likes, total_views, views_per_hour, views_per_day)
 					print('Done: page ', str(i))
