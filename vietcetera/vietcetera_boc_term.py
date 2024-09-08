@@ -1,12 +1,16 @@
 import logging
 import csv
+import os
 
-from datetime import datetime
+from datetime import datetime, timedelta
 from bs4 import BeautifulSoup
 from langdetect import detect
 
 import requests
 import notion_api
+from dotenv import load_dotenv
+
+load_dotenv()
 
 # https://img.vietcetera.com/uploads/images/20-dec-2022/bocterm.jpg
 
@@ -16,6 +20,7 @@ BLOG_LINK = "https://vietcetera.com/vn/"
 API_POSTS = "https://api.vietcetera.com/client/api/v2/collection/detail?limit=12&slug=boc-term&language=VN&page="
 
 notion_rows = []
+DATABASE_BOC_TERM_ID = os.getenv("DATABASE_ID")
 
 # max 21 ???
 TOTAL_PAGES = 1
@@ -79,7 +84,7 @@ def main():
         reader = csv.reader(file, delimiter=';')
         for index, row in enumerate(reader):
             if index != 0:
-                notion_api.add_row_to_database(row)
+                notion_api.add_row_to_database_boc_tem(row, DATABASE_BOC_TERM_ID,notion_rows[0])
 
 
 def extract_keyword(title):
