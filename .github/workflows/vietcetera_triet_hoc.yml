@@ -1,4 +1,4 @@
-name: get lastest posts from van hoa di lam topic vietcetera
+name: get lastest posts from triet hoc topic vietcetera
 
 on:
   workflow_dispatch:
