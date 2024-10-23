@@ -25,7 +25,7 @@ def main():
 
   args = parser.parse_args()
 
-  DATABASE_ID = os.getenv(args.database_name)
+  DATABASE_ID = args.database_name
   
   if (args.collection):
     vietcetera = VietceteraCollection(collection=args.collection, total_pages=MAX_PAGES, database_id=DATABASE_ID)

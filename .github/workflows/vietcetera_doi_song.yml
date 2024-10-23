@@ -1,0 +1,45 @@
+name: get lastest posts from van hoa di lam topic vietcetera
+
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: "35 16 * * *" # At 16:25 every day
+env:
+  # Setting an environment variable with the value of a configuration variable
+  NOTION_API_KEY: ${{ secrets.NOTION_API_KEY }}
+  DATABASE_ID: ${{ secrets.DATABASE_DOI_SONG_ID }}
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - name: checkout repo content
+        uses: actions/checkout@v3 # checkout the repository content
+
+      - name: setup python
+        uses: actions/setup-python@v4
+        with:
+          python-version: "3.11" # install the python version needed
+
+      - name: install python packages
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+
+      - name: execute py script # run main.py
+        run: |
+          cd vietcetera
+          python main.py -t 'doi-song' -d ${{ env.DATABASE_ID }}
+
+      - name: commit new log changes
+        run: |
+          git config --global user.email "minhkhuong2404@users.noreply.github.com"
+          git config --global user.name "Lữ Minh Khương"
+          git add .
+          git commit -m "Update log file for van hoa di lam topic"
+          git config pull.rebase true
+          git pull
+          git push
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

@@ -17,81 +17,81 @@ headers = {
 
 
 def add_row_to_database_boc_tem(notion_rows, database_id, row_headers):
-		url = 'https://api.notion.com/v1/pages'
-		data = {
-				"parent": {"database_id": database_id},
-				# "icon": {
-				#     "emoji": "\U0001F5B1"
-				# },
-				# "cover": {
-				#     "external": {
-				#         "url": "https://upload.wikimedia.org/wikipedia/commons/6/62/Tuscankale.jpg"
-				#     }
-				# },
-				"properties": {
-						row_headers[0]: {
-								"title": [
-										{
-												"text": {
-														"content": notion_rows[0]
-												}
-										}
-								]
-						},
-						row_headers[1]: {
-								"rich_text": [
-										{
-												"text": {
-														"content": notion_rows[1]
-												}
-										}
-								]
-						},
-						row_headers[2]: {
-								"rich_text": [
-										{
-												"text": {
-														"content": get_after_the_last_dot_most_2000_characters(notion_rows[2])
-												}
-										}
-								]
-						},
-						row_headers[3]: {
-								"rich_text": [
-										{
-												"text": {
-														"content": get_after_the_last_dot_most_2000_characters(notion_rows[3])
-												}
-										}
-								]
-						},
-						row_headers[4]: {
-								"url": notion_rows[4]
-						},
-						row_headers[5]: {
-								"files": [
-										{
-												"name": str(notion_rows[5].split('/')[-1]).split('.', maxsplit=1)[0],
-												"external": {
-														"url": notion_rows[5]
-												}
-										}
-								]
-						},
-						row_headers[6]: {
-								"select": {
-										"name": list(map(str, notion_rows[6][1:-1].split(',')))[0][1:-1]
-								}
-						},
-						row_headers[7]: {
-								"date": {
-										"start": notion_rows[7]
-								}
-						}
-				}
-		}
-		response = requests.post(url, data=json.dumps(data), headers=headers, timeout=60)
-		print(response.text)
+    url = 'https://api.notion.com/v1/pages'
+    data = {
+        "parent": {"database_id": database_id},
+        # "icon": {
+        #     "emoji": "\U0001F5B1"
+        # },
+        # "cover": {
+        #     "external": {
+        #         "url": "https://upload.wikimedia.org/wikipedia/commons/6/62/Tuscankale.jpg"
+        #     }
+        # },
+        "properties": {
+            row_headers[0]: {
+                "title": [
+                    {
+                        "text": {
+                            "content": notion_rows[0]
+                        }
+                    }
+                ]
+            },
+            row_headers[1]: {
+                "rich_text": [
+                    {
+                        "text": {
+                            "content": notion_rows[1]
+                        }
+                    }
+                ]
+            },
+            row_headers[2]: {
+                "rich_text": [
+                    {
+                        "text": {
+                            "content": get_after_the_last_dot_most_2000_characters(notion_rows[2])
+                        }
+                    }
+                ]
+            },
+            row_headers[3]: {
+                "rich_text": [
+                    {
+                        "text": {
+                            "content": get_after_the_last_dot_most_2000_characters(notion_rows[3])
+                        }
+                    }
+                ]
+            },
+            row_headers[4]: {
+                "url": notion_rows[4]
+            },
+            row_headers[5]: {
+                "files": [
+                    {
+                        "name": str(notion_rows[5].split('/')[-1]).split('.', maxsplit=1)[0],
+                        "external": {
+                            "url": notion_rows[5]
+                        }
+                    }
+                ]
+            },
+            row_headers[6]: {
+                "select": {
+                    "name": list(map(str, notion_rows[6][1:-1].split(',')))[0][1:-1]
+                }
+            },
+            row_headers[7]: {
+                "date": {
+                    "start": notion_rows[7]
+                }
+            }
+        }
+    }
+    response = requests.post(url, data=json.dumps(data), headers=headers, timeout=60)
+    print(response.text)
 
 
 def add_row_to_database(notion_rows, database_id, row_headers):
