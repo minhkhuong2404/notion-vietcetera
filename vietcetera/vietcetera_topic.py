@@ -82,10 +82,10 @@ class VietceteraTopic:
     def process_post(self, article_id, blog_full_link, image_full_link, keyword, post, published_at, soup,
                   title, topics, excerpt, total_likes, total_views, views_per_hour, views_per_day):
       try:
-          content_detail = soup.find('div', class_='styles_contentWrapper__xo07n')
+          content_detail = soup.find('div', id='article-detail-content')
           if content_detail is None:
               return
-          detail = content_detail.find('div', class_='styles_articleContentDetail__mMd_9 article-content-detail')
+          detail = content_detail.find('div', class_='article-content-detail')
 
           list_of_divs = detail.findAll('div')
           introduction = None

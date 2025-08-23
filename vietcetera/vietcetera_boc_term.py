@@ -50,8 +50,8 @@ def main():
             page = requests.get(blog_full_link, timeout=30)
             soup = BeautifulSoup(page.content, 'html.parser')
             try:
-                content_detail = soup.find('div', class_='styles_contentWrapper__xo07n')
-                detail = content_detail.find('div', class_='styles_articleContentDetail__mMd_9 article-content-detail')
+                content_detail = soup.find('div', id='article-detail-content')
+                detail = content_detail.find('div', class_='article-content-detail')
 
                 list_of_divs = detail.findAll('div')
                 what_isit_part = list_of_divs[0]

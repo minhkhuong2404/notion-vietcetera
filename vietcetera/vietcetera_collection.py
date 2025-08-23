@@ -65,8 +65,8 @@ class VietceteraCollection:
                 views_per_day = view_counter['data']['article']['viewsArticle']['1d_TopView']
 
                 try:
-                    content_detail = soup.find('div', class_='styles_contentWrapper__xo07n')
-                    detail = content_detail.find('div', class_='styles_articleContentDetail__mMd_9 article-content-detail')
+                    content_detail = soup.find('div', id='article-detail-content')
+                    detail = content_detail.find('div', class_='article-content-detail')
 
                     list_of_divs = detail.findAll('div')
                     what_is_it_part = list_of_divs[0]
