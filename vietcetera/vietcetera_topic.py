@@ -2,13 +2,12 @@ import csv
 import logging
 
 import requests
-from datetime import datetime
+from datetime import datetime, timedelta
 from bs4 import BeautifulSoup
 
 import notion_api
 from utils import extract_keyword, pre_process
 from constant import BLOG_LINK, IMG_LINK, NOTION_ROWS, VIEW_COUNTER
-from dateutil.relativedelta import relativedelta
 
 
 API_POSTS = "https://api.vietcetera.com/client/api/v2/topic-article?limit=10&topic[]="
@@ -126,3 +125,4 @@ class VietceteraTopic:
               logging.info('Done post: %s', post['title'])
       except requests.exceptions.RequestException as e:
           print(f"Request error: {e}")
+          raise requests.exceptions.RequestException(e)

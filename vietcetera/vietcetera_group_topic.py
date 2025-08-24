@@ -15,25 +15,25 @@ load_dotenv()
 
 # https://img.vietcetera.com/uploads/images/20-dec-2022/bocterm.jpg
 
-API_POSTS = "https://api.vietcetera.com/client/api/v2/collection/detail?limit=12&slug="
+API_POSTS = "https://api.vietcetera.com/client/api/v2/latest-article?limit=20&groupTopic="
 
 
-class VietceteraCollection:
-    def __init__(self, total_pages, collection: str, database_id: str):
+class VietceteraGroupTopic:
+    def __init__(self, total_pages, group_topic: str, database_id: str):
         self.total_pages = total_pages
-        self.collection = collection
-        self.api_link = API_POSTS + str(self.collection) + '&language=VN&page='
+        self.group_topic = group_topic
+        self.api_link = API_POSTS + str(self.group_topic) + '&language=VN&page='
         self.database_id = database_id
     def getPosts(self):
-        logging.basicConfig(filename='log/notion-' + str(self.collection) + '.log', format='%(asctime)s --- %(message)s', datefmt='%d/%m/%Y %I:%M:%S %p',
+        logging.basicConfig(filename='log/notion-' + str(self.group_topic) + '.log', format='%(asctime)s --- %(message)s', datefmt='%d/%m/%Y %I:%M:%S %p',
                             level=logging.INFO)
         for i in range(1, self.total_pages + 1):
             list_posts = requests.get(self.api_link + str(i), timeout=30).json()
             print('Processing page ', self.api_link + str(i))
-            if len(list_posts['data']['articles']) == 0:
-                print('No more posts in this collection ', str(self.collection))
+            if len(list_posts['data']['docs']) == 0:
+                print('No more posts in this group topic ', str(self.group_topic))
                 break
-            for post in list_posts['data']['articles']:
+            for post in list_posts['data']['docs']:
                 keyword = extract_keyword(post['title'])
 
                 image_link = post['images']['url']
@@ -80,17 +80,17 @@ class VietceteraCollection:
                             why_it_popular_part = pre_process(div, False)
                     # fromTime = datetime.strptime("2024-10-23", "%Y-%m-%d")
                     # if datetime.strptime(published_at, '%Y-%m-%dT%H:%M:%S.%fZ').date() > fromTime.date():
-                    if datetime.strptime(published_at, '%Y-%m-%dT%H:%M:%S.%fZ').date() == datetime.now().date():
-                        NOTION_ROWS.append([keyword, post['title'],
-                                            what_is_it_part.text.strip().replace("\xa0", " ").replace('\n', ''),
-                                            why_it_popular_part.text.strip().replace("\xa0", " ").replace('\n', ''),
-                                            blog_full_link, image_full_link, topics, published_at, excerpt, total_likes, total_views, views_per_hour, views_per_day])
-                        logging.info('Done: %s', post['title'])
+                    # if datetime.strptime(published_at, '%Y-%m-%dT%H:%M:%S.%fZ').date() == datetime.now().date():
+                    NOTION_ROWS.append([keyword, post['title'],
+																				what_is_it_part.text.strip().replace("\xa0", " ").replace('\n', ''),
+																				why_it_popular_part.text.strip().replace("\xa0", " ").replace('\n', ''),
+																				blog_full_link, image_full_link, topics, published_at, excerpt, total_likes, total_views, views_per_hour, views_per_day])
+                    logging.info('Done: %s', post['title'])
                 except Exception as e_mess:
                     print(e_mess)
                     raise Exception(e_mess)
             logging.info('Done page: %s/%s', str(i), str(self.total_pages))
-            logging.info('Number of posts for page %s: %s', str(i), str(len(list_posts['data']['articles'])))
+            logging.info('Number of posts for page %s: %s', str(i), str(len(list_posts['data']['docs'])))
             logging.info('Number of posts added on %s: %s', str(datetime.now().date()), str(len(NOTION_ROWS) - 1))
 
         # can be used to import directly to Notion database

@@ -4,4 +4,4 @@ EXCLUDE_FROM_KEYWORD = ['ta', 'du', 'sao', 'ý', 'y', 'dám', 'xa', 'bao', 'ra',
 IMG_LINK = "https://img.vietcetera.com/"
 BLOG_LINK = "https://vietcetera.com/vn/"
 VIEW_COUNTER = "https://api.vietcetera.com/client/api/v2/article-view-counter"
-MAX_PAGES = 1
+MAX_PAGES = 57

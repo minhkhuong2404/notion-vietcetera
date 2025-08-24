@@ -1,4 +1,5 @@
 from constant import MAX_PAGES
+from vietcetera_group_topic import VietceteraGroupTopic
 from vietcetera_collection import VietceteraCollection
 from vietcetera_topic import VietceteraTopic
 import os
@@ -23,6 +24,9 @@ def main():
   parser.add_argument('-c', '--collection', type=str,
                       help='Get by Vietcetera collection')
 
+  parser.add_argument('-g', '--group_topic', type=str,
+                      help='Get by Vietcetera group topic')
+
   args = parser.parse_args()
 
   DATABASE_ID = args.database_name
@@ -31,7 +35,11 @@ def main():
     vietcetera = VietceteraCollection(collection=args.collection, total_pages=MAX_PAGES, database_id=DATABASE_ID)
     vietcetera.getPosts()
     return
-  
+  elif (args.group_topic):
+    vietcetera = VietceteraGroupTopic(group_topic=args.group_topic, total_pages=MAX_PAGES, database_id=DATABASE_ID)
+    vietcetera.getPosts()
+    return
+
   vietcetera = VietceteraTopic(topic=args.topic, total_pages=MAX_PAGES, database_id=DATABASE_ID)
   vietcetera.getPosts()
   
