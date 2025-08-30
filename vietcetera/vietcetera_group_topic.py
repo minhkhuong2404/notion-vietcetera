@@ -80,12 +80,12 @@ class VietceteraGroupTopic:
                             why_it_popular_part = pre_process(div, False)
                     # fromTime = datetime.strptime("2024-10-23", "%Y-%m-%d")
                     # if datetime.strptime(published_at, '%Y-%m-%dT%H:%M:%S.%fZ').date() > fromTime.date():
-                    # if datetime.strptime(published_at, '%Y-%m-%dT%H:%M:%S.%fZ').date() == datetime.now().date():
-                    NOTION_ROWS.append([keyword, post['title'],
-																				what_is_it_part.text.strip().replace("\xa0", " ").replace('\n', ''),
-																				why_it_popular_part.text.strip().replace("\xa0", " ").replace('\n', ''),
-																				blog_full_link, image_full_link, topics, published_at, excerpt, total_likes, total_views, views_per_hour, views_per_day])
-                    logging.info('Done: %s', post['title'])
+                    if datetime.strptime(published_at, '%Y-%m-%dT%H:%M:%S.%fZ').date() == datetime.now().date():
+                        NOTION_ROWS.append([keyword, post['title'],
+                                            what_is_it_part.text.strip().replace("\xa0", " ").replace('\n', ''),
+                                            why_it_popular_part.text.strip().replace("\xa0", " ").replace('\n', ''),
+                                            blog_full_link, image_full_link, topics, published_at, excerpt, total_likes, total_views, views_per_hour, views_per_day])
+                        logging.info('Done: %s', post['title'])
                 except Exception as e_mess:
                     print(e_mess)
                     raise Exception(e_mess)
